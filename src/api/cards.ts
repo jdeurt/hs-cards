@@ -1,11 +1,11 @@
 import got from "got";
 import { Request, Response } from "express";
 import { HSCard } from "../types/card";
+import cfg from "./config";
 
 //hearthstone
 //https://hearthstonejson.com/docs/images.html
 export default async function(req: Request, res: Response) {
-    const cfg = require("./config");
     const filterTypes = {
         array: require("./types/array"),
         boolean: require("./types/boolean"),
