@@ -2,17 +2,12 @@ import got from "got";
 import { Request, Response } from "express";
 import { HSCard } from "../types/card";
 import cfg from "./config";
+import filterTypes from "./modules";
+
 
 //hearthstone
 //https://hearthstonejson.com/docs/images.html
 export default async function(req: Request, res: Response) {
-    const filterTypes = {
-        array: require("./types/array"),
-        boolean: require("./types/boolean"),
-        number: require("./types/number"),
-        string: require("./types/string")
-    };
-
     try {
         // Cache control for card data.
         if (!process.env.hs_cards_data_json) {
@@ -49,7 +44,7 @@ export default async function(req: Request, res: Response) {
                 // The filter content.
                 let checkProp = filters[filter];
                 // Will be used if the pipe is present in checkProp.
-                let multipleCheckProps = undefined;
+                let multipleCheckProps: string[] = [];
 
                 // If the checkProp includes pipes, split it up into multiple properties.
                 if (checkProp.includes("|")) {
@@ -62,7 +57,7 @@ export default async function(req: Request, res: Response) {
                     return filterTypes.array(multipleCheckProps, checkProp, cardProp);
                 } else if (typeof cardProp == "number") {
                     return filterTypes.number(multipleCheckProps, checkProp, cardProp);
-                } else { //boolean
+                } else {
                     return filterTypes.boolean(multipleCheckProps, checkProp, cardProp);
                 }
             });
